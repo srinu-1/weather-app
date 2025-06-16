@@ -1,0 +1,11 @@
+replicaCount: 2
+image:
+  repository: weather-app
+  tag: local
+  pullPolicy: Never
+
+service:
+  name: weather-app
+  type: NodePort
+  port: 80
+  nodePort: 30080
