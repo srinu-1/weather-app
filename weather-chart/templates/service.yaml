@@ -10,4 +10,4 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
   selector:
     app: {{ .Chart.Name }}
-    
+    release: {{ .Release.Name }}
