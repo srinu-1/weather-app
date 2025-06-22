@@ -27,7 +27,7 @@ stages:
 
         - task: AzureCLI@2
           inputs:
-            azureSubscription: 'weather-app-azure-conn'  # my Azure service connection
+            azureSubscription: 'weather-app-azure-conn'
             scriptType: bash
             scriptLocation: inlineScript
             inlineScript: |
@@ -61,6 +61,10 @@ stages:
         - publish: $(Build.ArtifactStagingDirectory)/charts
           artifact: helm-chart
 
+        - download: current
+          artifact: helm-chart
+          displayName: "Download Helm chart artifact"
+
         - task: AzureCLI@2
           inputs:
             azureSubscription: 'weather-app-azure-conn'
@@ -69,6 +73,7 @@ stages:
             inlineScript: |
               az aks get-credentials --resource-group $(resourceGroup) --name $(aksCluster)
               chmod +x ./script.sh
-              ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io
+              ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io "$(System.DefaultWorkingDirectory)/helm-chart"
           displayName: "Deploy Helm chart to AKS"
+
 
