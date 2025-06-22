@@ -63,7 +63,7 @@ stages:
 
         - task: AzureCLI@2
           inputs:
-            azureSubscription: 'azurecicd'
+            azureSubscription: 'weather-app-azure-conn'
             scriptType: bash
             scriptLocation: inlineScript
             inlineScript: |
