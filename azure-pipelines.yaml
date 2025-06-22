@@ -73,7 +73,6 @@ stages:
             inlineScript: |
               az aks get-credentials --resource-group $(resourceGroup) --name $(aksCluster)
               chmod +x ./script.sh
-              ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io "$(System.DefaultWorkingDirectory)/helm-chart"
+              ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io "$(Pipeline.Workspace)/helm-chart"
           displayName: "Deploy Helm chart to AKS"
-
 
