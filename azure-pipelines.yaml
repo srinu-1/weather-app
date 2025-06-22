@@ -27,7 +27,7 @@ stages:
 
         - task: AzureCLI@2
           inputs:
-            azureSubscription: 'azurecicd'  # your Azure service connection
+            azureSubscription: 'weather-app-azure-conn'  # my Azure service connection
             scriptType: bash
             scriptLocation: inlineScript
             inlineScript: |
