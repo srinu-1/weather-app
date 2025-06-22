@@ -4,10 +4,10 @@ trigger:
       - main
 
 pool:
-  name: Default
+  name: Default  
 
 variables:
-  acrName: weatherappacr1
+  acrName: weatherappacr
   imageName: weather-app
   resourceGroup: azurecicd
   aksCluster: weatherapp-aks
@@ -22,7 +22,8 @@ stages:
   jobs:
     - job: DockerBuild
       steps:
-        - checkout
+        - checkout: self
+          displayName: 'Checkout source code'
 
         - task: AzureCLI@2
           inputs:
@@ -30,13 +31,11 @@ stages:
             scriptType: bash
             scriptLocation: inlineScript
             inlineScript: |
+              az acr login --name $(acrName)
               docker build -t $(imageName):latest .
               docker tag $(imageName):latest $(acrName).azurecr.io/$(imageName):latest
-              docker tag $(imageName):latest $(acrName).azurecr.io/$(imageName):$(Build.BuildId)
               docker push $(acrName).azurecr.io/$(imageName):latest
-              docker push $(acrName).azurecr.io/$(imageName):$(Build.BuildId)
-
-
+          displayName: 'Build and Push Docker image to ACR'
 
 # ----- CD: Package Helm Chart and Deploy to AKS -----
 - stage: Deploy
@@ -44,7 +43,8 @@ stages:
   jobs:
     - job: HelmDeploy
       steps:
-        - checkout
+        - checkout: self
+          displayName: 'Checkout source code'
 
         - task: HelmInstaller@1
           inputs:
@@ -70,4 +70,5 @@ stages:
               az aks get-credentials --resource-group $(resourceGroup) --name $(aksCluster)
               chmod +x ./script.sh
               ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io
-          displayName: "Deploy Helm chart to AKS" 
+          displayName: "Deploy Helm chart to AKS"
+
