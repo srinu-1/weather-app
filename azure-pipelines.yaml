@@ -4,7 +4,7 @@ trigger:
       - main
 
 pool:
-  name: Default  # Your self-hosted agent pool
+  name: Default
 
 variables:
   acrName: weatherappacr1
