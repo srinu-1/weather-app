@@ -6,11 +6,21 @@ ACR_LOGIN_SERVER=$4
 
 export KUBECONFIG=$HOME/.kube/config
 
+# Move to the chart directory inside the pipeline workspace
+cd $(System.DefaultWorkingDirectory)/_temp/charts  # Updated path based on artifact publish
+
 helm ls -n $NAMESPACE | grep $CHART_NAME
-if [ $? -ne "0" ]; then
+if [ $? -ne 0 ]; then
   echo "Installing Helm chart..."
-  helm install $CHART_NAME oci://$ACR_LOGIN_SERVER/helm/$CHART_NAME --version $TAG --namespace $NAMESPACE --create-namespace
+  helm install $CHART_NAME $CHART_NAME-$TAG.tgz \
+    --set image.repository=$ACR_LOGIN_SERVER/$CHART_NAME \
+    --set image.tag=$TAG \
+    --namespace $NAMESPACE --create-namespace
 else
   echo "Upgrading Helm chart..."
-  helm upgrade $CHART_NAME oci://$ACR_LOGIN_SERVER/helm/$CHART_NAME --version $TAG --namespace $NAMESPACE
+  helm upgrade $CHART_NAME $CHART_NAME-$TAG.tgz \
+    --set image.repository=$ACR_LOGIN_SERVER/$CHART_NAME \
+    --set image.tag=$TAG \
+    --namespace $NAMESPACE
 fi
+
