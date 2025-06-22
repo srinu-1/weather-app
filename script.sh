@@ -23,4 +23,3 @@ else
     --set image.tag=$TAG \
     --namespace $NAMESPACE
 fi
-
