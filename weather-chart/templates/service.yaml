@@ -7,7 +7,7 @@ spec:
   ports:
     - port: {{ .Values.service.port }}
       targetPort: 80
-      nodePort: {{ .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort  | default 30080 }}
   selector:
     app: {{ .Chart.Name }}
     release: {{ .Release.Name }}
