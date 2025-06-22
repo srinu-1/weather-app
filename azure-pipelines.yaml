@@ -30,10 +30,12 @@ stages:
             scriptType: bash
             scriptLocation: inlineScript
             inlineScript: |
-              az acr login --name $(acrName)
               docker build -t $(imageName):latest .
-              docker tag weather-app:$(Build.BuildId) $(acrName).azurecr.io/weather-app:$(Build.BuildId)
-              docker push $(acrName).azurecr.io/weather-app:$(Build.BuildId)
+              docker tag $(imageName):latest $(acrName).azurecr.io/$(imageName):latest
+              docker tag $(imageName):latest $(acrName).azurecr.io/$(imageName):$(Build.BuildId)
+              docker push $(acrName).azurecr.io/$(imageName):latest
+              docker push $(acrName).azurecr.io/$(imageName):$(Build.BuildId)
+
 
 
 # ----- CD: Package Helm Chart and Deploy to AKS -----
