@@ -51,7 +51,7 @@ stages:
             helmVersionToInstall: 'latest'
 
         - script: |
-            cd weather-chart
+            cd $(chartName)
             helm lint .
             helm package . --version $(chartVersion)
             mkdir -p $(Build.ArtifactStagingDirectory)/charts
@@ -59,11 +59,10 @@ stages:
           displayName: "Package Helm chart"
 
         - publish: $(Build.ArtifactStagingDirectory)/charts
-          artifact: helm-chart-$(Build.BuildId)
-
+          artifact: helm-chart
 
         - download: current
-          artifact: helm-chart-$(Build.BuildId)
+          artifact: helm-chart
           displayName: "Download Helm chart artifact"
 
         - task: AzureCLI@2
@@ -73,7 +72,7 @@ stages:
             scriptLocation: inlineScript
             inlineScript: |
               az aks get-credentials --resource-group $(resourceGroup) --name $(aksCluster)
+              kubectl get ns $(namespace) || kubectl create ns $(namespace)
               chmod +x ./script.sh
-              ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io "$(Pipeline.Workspace)/helm-chart-$(Build.BuildId)"
+              ./script.sh $(chartVersion) $(namespace) $(imageName) $(acrName).azurecr.io "$(Pipeline.Workspace)/helm-chart"
           displayName: "Deploy Helm chart to AKS"
-
