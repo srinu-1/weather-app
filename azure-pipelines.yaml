@@ -59,10 +59,11 @@ stages:
           displayName: "Package Helm chart"
 
         - publish: $(Build.ArtifactStagingDirectory)/charts
-          artifact: helm-chart
+          artifact: helm-chart-$(Build.BuildId)
+
 
         - download: current
-          artifact: helm-chart
+          artifact: helm-chart$(Build.BuildId)
           displayName: "Download Helm chart artifact"
 
         - task: AzureCLI@2
@@ -73,6 +74,6 @@ stages:
             inlineScript: |
               az aks get-credentials --resource-group $(resourceGroup) --name $(aksCluster)
               chmod +x ./script.sh
-              ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io "$(Pipeline.Workspace)/helm-chart/charts"
+              ./script.sh $(chartVersion) $(namespace) $(chartName) $(acrName).azurecr.io "$(Pipeline.Workspace)/helm-chart-$(Build.BuildId)"
           displayName: "Deploy Helm chart to AKS"
 
