@@ -7,7 +7,7 @@ pool:
   name: srinuagent
 
 variables:
-  acrName: weatherappacr
+  acrName: weatherappacr1
   imageName: weather-app
   resourceGroup: azurecicd
   aksCluster: weatherapp-aks
