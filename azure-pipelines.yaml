@@ -63,7 +63,7 @@ stages:
 
 
         - download: current
-          artifact: helm-chart$(Build.BuildId)
+          artifact: helm-chart-$(Build.BuildId)
           displayName: "Download Helm chart artifact"
 
         - task: AzureCLI@2
