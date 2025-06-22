@@ -1,7 +1,7 @@
 replicaCount: 2
 image:
-  repository: ""
-  tag: ""
+  repository: weatherappacr1.azurecr.io/weather-app
+  tag: latest
   pullPolicy: IfNotPresent
 
 service:
